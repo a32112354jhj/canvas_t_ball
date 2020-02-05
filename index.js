@@ -1,14 +1,19 @@
 const canvas = document.querySelector("#mycanvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-// canvas.with = 500;
-// canvas.height = 500;
-console.log(window.innerWidth);
-console.log(window.innerHeight);
+ww = canvas.width = window.innerWidth;
+wh = canvas.height = window.innerHeight;
+
 var ww = canvas.width;
 var wh = canvas.height;
+
+window.addEventListener("resize", function () {
+ canvas.width = window.innerWidth;
+ canvas.height = window.innerHeight;
+  ww = canvas.width;
+  wh = canvas.height;
+  console.log(canvas.width);
+});
 
 var Ball = function () {
   this.p = {
@@ -38,7 +43,33 @@ Ball.prototype.draw = function () {
   ctx.fillStyle = controls.color;
   ctx.fill();
   ctx.restore();
+  this.drawV();
 };
+
+Ball.prototype.drawV = function () {
+  ctx.beginPath();
+  ctx.save();
+  ctx.translate(this.p.x, this.p.y);
+  ctx.scale(3, 3);
+  ctx.moveTo(0, 0);
+  ctx.lineTo(this.v.x, this.v.y);
+  ctx.strokeStyle = "blue";
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(this.v.x, 0);
+  ctx.strokeStyle = "red";
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(0, this.v.y);
+  ctx.strokeStyle = "green";
+  ctx.stroke();
+
+  ctx.restore();
+}
 
 //球的運動
 Ball.prototype.update = function () {
@@ -191,7 +222,7 @@ canvas.addEventListener('mousemove', function (evt) {
   }
 
   let dist = getDistance(nowPos, ball.p);
-  
+
   if (dist < ball.r) {
     canvas.style.cursor = "move";
   }
